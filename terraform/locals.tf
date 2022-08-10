@@ -1,6 +1,7 @@
 locals {
   tags = {
-    CreatedBy = "terraform"
-    Project   = "App"
+    CreatedBy   = "terraform"
+    Project     = "App"
+    Environment = "dev"
   }
 }
