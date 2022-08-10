@@ -7,3 +7,7 @@ output "beanstalk" {
 output "subnets" {
   value = module.network.subnets
 }
+
+output "webhook_url" {
+  value = module.pipeline.webhook_url
+}

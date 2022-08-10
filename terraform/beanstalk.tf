@@ -9,6 +9,9 @@ resource "aws_elastic_beanstalk_environment" "app_dev" {
   tier                = "WebServer"
   solution_stack_name = data.aws_elastic_beanstalk_solution_stack.app.name
 
+
+  # TO-DO: Add autoscaling parameter for CPU
+
   #===== EC2 =====#
   setting {
     namespace = "aws:ec2:vpc"

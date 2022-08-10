@@ -16,6 +16,7 @@ resource "aws_codepipeline_webhook" "app" {
   }
 }
 
+# TO-DO: Add github credentials on terraform
 #resource "github_repository_webhook" "app" {
 #  repository = "${var.repo_user}/${var.repo_name}"
 #  configuration {
