@@ -13,3 +13,16 @@ variable "repo_name" {
 variable "repo_branch" {
   type = string
 }
+
+variable "ebs_application_name" {
+  type = string
+}
+
+variable "ebs_environment_name" {
+  type = string
+}
+
+variable "ebs_arn" {
+  type        = string
+  description = "ARN of the Elastic Beanstalk Application"
+}

@@ -43,10 +43,26 @@ resource "aws_codepipeline" "pipeline" {
       provider = "CodeBuild"
       version  = "1"
       configuration = {
-        ProjectName = "app-build"
+        ProjectName = aws_codebuild_project.app.name
       }
       input_artifacts  = ["SourceArtifact"]
       output_artifacts = ["BuildArtifact"]
+    }
+  }
+
+  stage {
+    name = "Deploy"
+    action {
+      category        = "Deploy"
+      owner           = "AWS"
+      provider        = "ElasticBeanstalk"
+      version         = "1"
+      name            = "Deploy"
+      input_artifacts = ["BuildArtifact"]
+      configuration = {
+        ApplicationName = var.ebs_application_name
+        EnvironmentName = var.ebs_environment_name
+      }
     }
   }
 

@@ -4,3 +4,9 @@ phases:
   build:
     commands:
       - ls
+
+artifacts:
+  files:
+    - "**/*"
+  name: app-${env}
+  base-directory: app
