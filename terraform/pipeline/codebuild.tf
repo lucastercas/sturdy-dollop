@@ -1,10 +1,3 @@
-data "template_file" "build" {
-  template = file("${path.module}/build.yml")
-  vars = {
-    env = "dev"
-  }
-}
-
 resource "aws_codebuild_project" "app" {
   badge_enabled  = false
   build_timeout  = 60
@@ -39,8 +32,10 @@ resource "aws_codebuild_project" "app" {
   }
 
   source {
-    type      = "CODEPIPELINE"
-    buildspec = data.template_file.build.rendered
+    type = "CODEPIPELINE"
+    buildspec = templatefile("${path.module}/build.yml", {
+      env = "dev"
+    })
   }
 
   tags = merge(var.tags, {
