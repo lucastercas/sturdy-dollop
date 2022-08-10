@@ -22,13 +22,13 @@ resource "aws_elastic_beanstalk_environment" "app_dev" {
   setting {
     namespace = "aws:ec2:vpc"
     name      = "AssociatePublicIpAddress"
-    value     = true
+    value     = false
   }
 
   setting {
     namespace = "aws:ec2:vpc"
     name      = "Subnets"
-    value     = module.network.subnets.public[0]
+    value     = module.network.subnets.private[0]
   }
 
   setting {
@@ -80,13 +80,66 @@ resource "aws_elastic_beanstalk_environment" "app_dev" {
     value     = 4
   }
 
+  #===== Autoscaling Trigger =====#
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "MeasureName"
+    value     = "CPUUtilization"
+  }
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "Statistic"
+    value     = "Average"
+  }
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "Unit"
+    value     = "Percent"
+  }
+
+  #===== Autoscaling Rollout ====#
+  setting {
+    namespace = "aws:autoscaling:updatepolicy:rollingupdate"
+    name      = "RollingUpdateEnabled"
+    value     = true
+  }
+  setting {
+    namespace = "aws:autoscaling:updatepolicy:rollingupdate"
+    name      = "RollingUpdateType"
+    value     = "Health"
+  }
+  setting {
+    namespace = "aws:autoscaling:updatepolicy:rollingupdate"
+    name      = "MinInstancesInService"
+    value     = 1
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:command"
+    name      = "DeploymentPolicy"
+    value     = "RollingWithAdditionalBatch"
+  }
+  setting {
+    namespace = "aws:autoscaling:updatepolicy:rollingupdate"
+    name      = "MaxBatchSize"
+    value     = 1
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:command"
+    name      = "BatchSizeType"
+    value     = "Percentage"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:command"
+    name      = "BatchSize"
+    value     = 30
+  }
+
   #===== Beanstalk =====#
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "LoadBalancerType"
     value     = "classic"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:healthreporting:system"
     name      = "SystemType"
