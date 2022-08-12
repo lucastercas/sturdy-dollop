@@ -1,13 +1,13 @@
 resource "aws_codebuild_project" "app" {
   badge_enabled  = false
   build_timeout  = 60
-  name           = "app-build"
+  name           = "${var.app_name}-${var.environment}-build"
   queued_timeout = 480
   service_role   = aws_iam_role.codebuild.arn
 
   artifacts {
     encryption_disabled    = false
-    name                   = "app-dev.zip"
+    name                   = "${var.app_name}-${var.environment}-.zip"
     override_artifact_name = false
     packaging              = "NONE"
     type                   = "CODEPIPELINE"
@@ -39,6 +39,6 @@ resource "aws_codebuild_project" "app" {
   }
 
   tags = merge(var.tags, {
-    Name = "app-dev"
+    Name = "${var.app_name}-${var.environment}"
   })
 }

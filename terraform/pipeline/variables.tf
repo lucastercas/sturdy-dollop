@@ -1,3 +1,11 @@
+variable "environment" {
+  type = string
+}
+
+variable "app_name" {
+  type = string
+}
+
 variable "tags" {
   type = map(string)
 }
@@ -25,4 +33,8 @@ variable "ebs_environment_name" {
 variable "ebs_arn" {
   type        = string
   description = "ARN of the Elastic Beanstalk Application"
+}
+
+variable "codestar_connection_arn" {
+  type = string
 }

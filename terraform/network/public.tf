@@ -5,16 +5,15 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
   availability_zone       = each.key
   tags = merge(var.tags, {
-    Name        = "public-app-${each.key}"
-    Environment = "app-beanstalk"
-    Type        = "public"
+    Name = "public-${var.app_name}-${each.key}"
+    Type = "public"
   })
 }
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.oregon.id
   tags = merge(var.tags, {
-    Name = "app-igw"
+    Name = "${var.app_name}-igw"
   })
 }
 
@@ -23,7 +22,7 @@ resource "aws_route_table" "public" {
   vpc_id   = aws_vpc.oregon.id
 
   tags = merge(var.tags, {
-    Name = "app-public-${each.key}"
+    Name = "public-${var.app_name}-${each.key}"
   })
 }
 
@@ -40,12 +39,11 @@ resource "aws_route" "public" {
   destination_cidr_block = "0.0.0.0/0"
 }
 
-
 resource "aws_eip" "nat_eip" {
   for_each = aws_subnet.public
   vpc      = true
   tags = merge(var.tags, {
-    Name = "app-${each.key}"
+    Name = "${var.app_name}-${each.key}"
   })
 }
 
@@ -54,6 +52,6 @@ resource "aws_nat_gateway" "public" {
   allocation_id = aws_eip.nat_eip[each.key].id
   subnet_id     = aws_subnet.public[each.key].id
   tags = merge(var.tags, {
-    Name = "app-${each.key}"
+    Name = "${var.app_name}-${each.key}"
   })
 }

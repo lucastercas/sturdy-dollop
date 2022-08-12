@@ -43,7 +43,7 @@ resource "aws_iam_role_policy" "codebuild_policy" {
           "s3:List*",
           "s3:PutObject"
         ]
-        Resource = [aws_s3_bucket.source.arn, "${aws_s3_bucket.source.arn}/*"]
+        Resource = [aws_s3_bucket.artifact.arn, "${aws_s3_bucket.artifact.arn}/*"]
       },
       {
         Effect   = "Allow"
@@ -82,12 +82,12 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
           "s3:PutObjectAcl",
           "s3:PutObject"
         ]
-        Resource : ["${aws_s3_bucket.source.arn}", "${aws_s3_bucket.source.arn}/*"]
+        Resource : ["${aws_s3_bucket.artifact.arn}", "${aws_s3_bucket.artifact.arn}/*"]
       },
       {
         Effect : "Allow"
         Action : ["codestar-connections:UseConnection"]
-        Resource : "${aws_codestarconnections_connection.github.arn}"
+        Resource : var.codestar_connection_arn
       },
       {
         Effect : "Allow"

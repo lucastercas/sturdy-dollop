@@ -1,10 +1,10 @@
 resource "aws_elastic_beanstalk_application" "app" {
-  name = "app"
+  name = local.app_name
 }
 
-resource "aws_elastic_beanstalk_environment" "app_dev" {
-  name                = "app-dev"
-  description         = "App Dev Environment"
+resource "aws_elastic_beanstalk_environment" "app" {
+  name                = "${local.app_name}-${local.environment}"
+  description         = "EBS Environment - ${local.app_name}-${local.environment}"
   application         = aws_elastic_beanstalk_application.app.name
   tier                = "WebServer"
   solution_stack_name = data.aws_elastic_beanstalk_solution_stack.app.name
@@ -146,5 +146,31 @@ resource "aws_elastic_beanstalk_environment" "app_dev" {
     value     = "enhanced"
   }
 
-  tags = merge(local.tags, {})
+  tags = merge(local.tags, {
+    Name = "${local.app_name}-${local.environment}"
+  })
+}
+
+resource "aws_security_group" "app_sg" {
+  name        = "app-sg"
+  description = local.app_name
+  vpc_id      = module.network.vpc.id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(local.tags, {
+    Name = "app-sg"
+  })
 }

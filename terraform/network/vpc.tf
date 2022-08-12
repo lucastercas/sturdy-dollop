@@ -3,6 +3,6 @@ resource "aws_vpc" "oregon" {
   enable_dns_hostnames = true
   enable_dns_support   = true
   tags = merge(var.tags, {
-    Name = "app"
+    Name = var.app_name
   })
 }

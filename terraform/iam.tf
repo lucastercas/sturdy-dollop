@@ -1,5 +1,5 @@
 resource "aws_iam_role" "beanstalk" {
-  name = "app-beanstalk"
+  name = "${local.app_name}-ebs"
   path = "/"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -13,7 +13,7 @@ resource "aws_iam_role" "beanstalk" {
     }]
   })
   inline_policy {
-    name = "app-beanstalk"
+    name = "${local.app_name}-ebs"
     policy = jsonencode({
       Version = "2012-10-17"
       Statement = [
@@ -47,15 +47,15 @@ resource "aws_iam_role" "beanstalk" {
     })
   }
   tags = merge(local.tags, {
-    Name = "app-beanstalk"
+    Name = "${local.app_name}-ebs"
   })
 }
 
 resource "aws_iam_instance_profile" "beanstalk" {
-  name = "app-beanstalk"
+  name = "${local.app_name}-ebs"
   path = "/"
   role = aws_iam_role.beanstalk.name
   tags = merge(local.tags, {
-    Name = "app-beanstalk"
+    Name = "${local.app_name}-ebs"
   })
 }

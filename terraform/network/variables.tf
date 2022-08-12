@@ -5,3 +5,7 @@ variable "tags" {
 variable "availability_zones" {
   type = list(string)
 }
+
+variable "app_name" {
+  type = string
+}

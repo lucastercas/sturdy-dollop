@@ -4,9 +4,8 @@ resource "aws_subnet" "private" {
   cidr_block        = cidrsubnet(aws_vpc.oregon.cidr_block, local.subnet_cidr_bits, each.value)
   availability_zone = each.key
   tags = merge(var.tags, {
-    Name        = "private-app-${each.key}"
-    Environment = "app-beanstalk"
-    Type        = "private"
+    Name = "private-${var.app_name}-${each.key}"
+    Type = "private"
   })
 }
 
@@ -14,7 +13,7 @@ resource "aws_route_table" "private" {
   for_each = aws_subnet.private
   vpc_id   = aws_vpc.oregon.id
   tags = merge(var.tags, {
-    Name = "app-private-${each.key}"
+    Name = "private-${var.app_name}-${each.key}"
     Type = "private"
   })
 }

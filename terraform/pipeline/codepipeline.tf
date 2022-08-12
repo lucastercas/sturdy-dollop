@@ -1,19 +1,14 @@
-resource "aws_codestarconnections_connection" "github" {
-  provider_type = "GitHub"
-  name          = "app-connection"
-
-}
-resource "aws_s3_bucket" "source" {
-  bucket        = "app-pipeline"
+resource "aws_s3_bucket" "artifact" {
+  bucket        = "${var.app_name}-artifact"
   force_destroy = true
 }
 
 resource "aws_codepipeline" "pipeline" {
-  name     = "app-pipeline"
+  name     = "${var.app_name}-${var.environment}-pipeline"
   role_arn = aws_iam_role.codepipeline.arn
 
   artifact_store {
-    location = aws_s3_bucket.source.bucket
+    location = aws_s3_bucket.artifact.bucket
     type     = "S3"
   }
 
@@ -26,7 +21,7 @@ resource "aws_codepipeline" "pipeline" {
       provider = "CodeStarSourceConnection"
       version  = "1"
       configuration = {
-        ConnectionArn    = aws_codestarconnections_connection.github.arn
+        ConnectionArn    = var.codestar_connection_arn
         FullRepositoryId = "${var.repo_user}/${var.repo_name}"
         BranchName       = var.repo_branch
       }
@@ -66,5 +61,7 @@ resource "aws_codepipeline" "pipeline" {
     }
   }
 
-  tags = merge(var.tags, {})
+  tags = merge(var.tags, {
+    Name = "${var.app_name}-${var.environment}"
+  })
 }
