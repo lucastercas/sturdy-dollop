@@ -7,7 +7,7 @@ resource "aws_codebuild_project" "app" {
 
   artifacts {
     encryption_disabled    = false
-    name                   = "${var.app_name}-${var.environment}-.zip"
+    name                   = "${var.app_name}-${var.environment}.zip"
     override_artifact_name = false
     packaging              = "NONE"
     type                   = "CODEPIPELINE"

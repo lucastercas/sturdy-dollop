@@ -2,15 +2,13 @@ resource "aws_elastic_beanstalk_application" "app" {
   name = local.app_name
 }
 
+# Settings can be found here: https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html
 resource "aws_elastic_beanstalk_environment" "app" {
   name                = "${local.app_name}-${local.environment}"
   description         = "EBS Environment - ${local.app_name}-${local.environment}"
   application         = aws_elastic_beanstalk_application.app.name
   tier                = "WebServer"
   solution_stack_name = data.aws_elastic_beanstalk_solution_stack.app.name
-
-
-  # TO-DO: Add autoscaling parameter for CPU
 
   #===== EC2 =====#
   setting {
@@ -93,6 +91,12 @@ resource "aws_elastic_beanstalk_environment" "app" {
   }
   setting {
     namespace = "aws:autoscaling:trigger"
+    name      = "BreachDuration"
+    value     = "2"
+
+  }
+  setting {
+    namespace = "aws:autoscaling:trigger"
     name      = "Unit"
     value     = "Percent"
   }
@@ -144,6 +148,11 @@ resource "aws_elastic_beanstalk_environment" "app" {
     namespace = "aws:elasticbeanstalk:healthreporting:system"
     name      = "SystemType"
     value     = "enhanced"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application"
+    name      = "Application Healthcheck URL"
+    value     = "/index.html"
   }
 
   tags = merge(local.tags, {

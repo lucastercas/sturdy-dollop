@@ -45,11 +45,6 @@ resource "aws_iam_role_policy" "codebuild_policy" {
         ]
         Resource = [aws_s3_bucket.artifact.arn, "${aws_s3_bucket.artifact.arn}/*"]
       },
-      {
-        Effect   = "Allow"
-        Action   = ["*"]
-        Resource = ["*"]
-      }
     ]
   })
 }
@@ -93,11 +88,6 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
         Effect : "Allow"
         Action : ["codebuild:BatchGetBuilds", "codebuild:StartBuild"]
         Resource : "*"
-      },
-      {
-        Effect   = "Allow"
-        Action   = ["*"]
-        Resource = ["*"]
       }
     ]
   })
